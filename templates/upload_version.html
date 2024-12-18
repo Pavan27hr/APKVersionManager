@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload New Version - Version Control Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            background-color: #000408;
+        }
+
+        form {
+            background-color: #1a1919;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        label {
+            font-size: 18px;
+            color: #34495e;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"], input[type="file"], textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+
+        button {
+            padding: 10px 20px;
+            text-transform: uppercase;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 500;
+            color: #ffffff80;
+            text-shadow: none;
+            background: transparent;
+            cursor: pointer;
+            box-shadow: transparent;
+            border: 1px solid #ffffff80;
+            transition: 0.5s ease;
+            user-select: none;
+          }
+          
+          button:hover,
+          :focus {
+            color: #ffffff;
+            background: #008cff;
+            border: 1px solid #008cff;
+            text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
+            box-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff,
+              0 0 100px #008cff;
+          }
+
+        /* Spinner Style */
+        .spinner {
+            display: none;
+            margin: 20px auto;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modal Popup Style */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #2ecc71;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <h1>Upload New Version</h1>
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+            <label for="application_name">Application Name:</label>
+            <input type="text" id="application_name" name="application_name" required>
+
+            <label for="version_code">Version Code:</label>
+            <input type="text" id="version_code" name="version_code" required>
+
+            <label for="version_description">Version Description:</label>
+            <textarea id="version_description" name="version_description" rows="5" required></textarea>
+
+            <label for="file">Upload APK:</label>
+            <input type="file" id="file" name="file" accept=".apk" required>
+
+            <button type="submit" id="submitBtn">Upload</button>
+
+            <!-- Spinner for loading effect -->
+            <div id="spinner" class="spinner"></div>
+        </form>
+
+        <!-- Modal for success message -->
+        <div id="successModal" class="modal">
+            <div class="modal-content">
+                <h2>Upload Successful!</h2>
+                <p>Your new version has been uploaded successfully.</p>
+                <button class="close-btn" id="closeModal">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get the submit button, spinner, and modal elements
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = document.getElementById('spinner');
+        const successModal = document.getElementById('successModal');
+        const closeModal = document.getElementById('closeModal');
+
+        // Add event listener for form submission
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            // Disable the submit button and show spinner
+            submitBtn.disabled = true;
+            submitBtn.classList.add('disabled');
+            spinner.style.display = 'block';
+
+            // Simulate upload success response
+            event.preventDefault(); // Remove this if you handle the POST request normally
+            setTimeout(() => {
+                spinner.style.display = 'none'; // Hide spinner
+                successModal.style.display = 'flex'; // Show success modal
+            }, 2000); // Simulate 2 seconds delay for upload
+        });
+
+        // Add event listener to close the modal
+        closeModal.addEventListener('click', function() {
+            successModal.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('disabled');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Version Manager - Links</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #fff;
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #00aaff;
+            text-align: center;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #333;
+        }
+        th {
+            background-color: #00aaff;
+        }
+        tr:nth-child(even) {
+            background-color: #222;
+        }
+        tr:nth-child(odd) {
+            background-color: #111;
+        }
+        .action-btn, .copy-link {
+            background-color: #00aaff;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .action-btn:hover, .copy-link:hover {
+            background-color: #0099cc;
+        }
+        .copy-link {
+            background-color: #ffaa00;
+        }
+        .copy-link:hover {
+            background-color: #cc7700;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Release Versions</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Application Name</th>
+                    <th>Version Code</th>
+                    <th>Release Date</th>
+                    <th>Download Count</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+              {% for link in links %}
+              <tr>
+                  <td>{{ link.application_name }}</td>
+                  <td>{{ link.version_code }}</td>
+                  <td>{{ link.release_date }}</td>
+                  <td>{{ link.download_count }}</td>
+                  <td>
+                      <a href="{{ url_for('download_page', release_id=link.release_id) }}" class="action-btn">Download</a>
+                      <button class="copy-link" onclick="copyLink('{{ url_for('download_page', release_id=link.release_id, _external=True) }}')">Copy Link</button>
+                  </td>
+              </tr>
+              {% else %}
+              <tr>
+                  <td colspan="5">No links found</td>
+              </tr>
+              {% endfor %}
+          </tbody>
+        </table>
+    </div>
+
+    <script>
+        function copyLink(link) {
+            navigator.clipboard.writeText(link).then(function() {
+                alert("Link copied to clipboard: " + link);
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>

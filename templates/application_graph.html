@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Graph</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #fff;
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #111;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            color: #00aaff;
+            text-align: center;
+            margin-top: 20px;
+        }
+        h2 {
+            color: #00aaff;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .graph-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #00aaff;
+            border-radius: 8px;
+        }
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-container a {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #00aaff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 18px;
+        }
+        .button-container a:hover {
+            background-color: #0099cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Graph for Application: {{ application_name }}</h1>
+        
+        <h2>Version Code vs Download Count</h2>
+        
+        <div class="graph-container">
+            <img src="data:image/png;base64,{{ graph }}" alt="Download Count Graph">
+        </div>
+        
+        <div class="button-container">
+            <a href="{{ url_for('analytics') }}">Back to Analytics Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

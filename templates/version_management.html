@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Version Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #fff;
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #00aaff;
+            text-align: center;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #333;
+        }
+        th {
+            background-color: #00aaff;
+        }
+        tr:nth-child(even) {
+            background-color: #222;
+        }
+        tr:nth-child(odd) {
+            background-color: #111;
+        }
+        button, input[type="submit"], .download-button {
+            background-color: #00aaff;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover, .download-button:hover {
+            background-color: #0099cc;
+        }
+
+
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #333;
+            background-color: #000;
+            color: #fff;
+            width: calc(100% - 22px);
+            margin-right: 10px;
+        }
+        .actions {
+            display: flex;
+            align-items: center;
+        }
+        .actions > * {
+            margin-right: 10px;
+        }
+        .filter-form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function promptDriveLink(versionId) {
+            var driveLink = prompt("Please enter the drive link for this version:");
+            if (driveLink) {
+                fetch('/release', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        version_id: versionId,
+                        drive_link: driveLink
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else if (data.error) {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('An error occurred while submitting the drive link.');
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Version Management</h1>
+        
+        <form action="{{ url_for('version_management', application_name=application_name) }}" method="get" class="filter-form">
+            <label for="filter">Filter:</label>
+            <select id="filter" name="filter">
+                <option value="all" {% if request.args.get('filter') == 'all' %}selected{% endif %}>All</option>
+                <option value="current_day" {% if request.args.get('filter') == 'current_day' %}selected{% endif %}>Current Day</option>
+                <option value="previous_5_days" {% if request.args.get('filter') == 'previous_5_days' %}selected{% endif %}>Previous 5 Days</option>
+                <option value="previous_10_days" {% if request.args.get('filter') == 'previous_10_days' %}selected{% endif %}>Previous 10 Days</option>
+                <option value="previous_month" {% if request.args.get('filter') == 'previous_month' %}selected{% endif %}>Previous Month</option>
+            </select>
+            <button  type="submit">Apply Filter</button>
+        </form>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Application Name</th>
+                    <th>Version Code</th>
+                    <th>Upload Date</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for version in versions %}
+                <tr>
+                    <td>{{ application_name }}</td>
+                    <td>{{ version.version_code }}</td>
+                    <td>{{ version.upload_date }}</td>
+                    <td>{{ version.version_description }}</td>
+                    <td class="actions">
+                        <a href="{{ url_for('download', version_id=version.version_id) }}" class="download-button">Download</a>
+                        <button type="button" onclick="promptDriveLink('{{ version.version_id }}')" class="button">Release</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <a href="{{ url_for('upload_version') }}" class="button" style="margin-top: 20px; display: block; text-align: center;">Upload New Version</a>
+    </div>
+</body>
+</html>
